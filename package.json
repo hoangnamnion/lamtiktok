@@ -1,0 +1,19 @@
+{
+  "name": "tiktok-quote-maker",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "TikTok Quote & Status 9:16 Native iOS App Maker",
+  "scripts": {
+    "bundle": "node scripts/bundle.js",
+    "build": "node scripts/bundle.js",
+    "test": "node --test tests/*.test.mjs",
+    "cap:sync": "npm run build && npx cap sync ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.1.0",
+    "@capacitor/ios": "^6.1.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.0"
+  }
+}

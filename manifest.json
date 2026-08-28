@@ -1,0 +1,20 @@
+{
+  "name": "TikTok Quote Maker",
+  "short_name": "TikTokQuote",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0d0d11",
+  "theme_color": "#0d0d11",
+  "icons": [
+    {
+      "src": "nen.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "nen.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

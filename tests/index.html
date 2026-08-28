@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Unit Test Runner - TikTok Quote Maker</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #121214; color: #eee; padding: 24px; }
+    h1 { color: #fff; font-size: 20px; }
+    .suite { background: #1b1b1f; border-radius: 8px; padding: 16px; margin-bottom: 16px; border: 1px solid #2e2e33; }
+    .suite-title { font-weight: bold; margin-bottom: 12px; font-size: 16px; color: #a1a1aa; }
+    .test { padding: 8px 12px; margin: 4px 0; border-radius: 4px; display: flex; align-items: center; gap: 8px; }
+    .pass { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+    .fail { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+    .icon { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>🧪 Kết Quả Chạy Unit Test (TDD Suite)</h1>
+  <div id="results"></div>
+
+  <script type="module">
+    import { parseTextToTokens, applyAlternateParagraphColors, serializeTokensToHtml } from '../src/text-parser.js';
+    import { calculateWrappedLines, calculateVerticalPosition } from '../src/layout-engine.js';
+    import { generateExportFilename } from '../src/export-helper.js';
+    import { getSnapHeight, calculateSnapPoint } from '../src/bottom-sheet.js';
+
+    const resultsEl = document.getElementById('results');
+
+    function assert(condition, message) {
+      if (!condition) throw new Error(message || 'Assertion failed');
+    }
+    function assertEqual(actual, expected, message) {
+      if (actual !== expected) throw new Error(`${message || ''} Expected: ${expected}, but got: ${actual}`);
+    }
+
+    const suites = [
+      {
+        name: 'Suite 1: Text & Color Tokenizer',
+        tests: [
+          {
+            name: '1.1: parseTextToTokens phân tích text thuần',
+            run: () => {
+              const res = parseTextToTokens('Dòng 1\nDòng 2');
+              assertEqual(res.length, 2);
+              assertEqual(res[0].tokens[0].text, 'Dòng 1');
+              assertEqual(res[0].tokens[0].colorId, 1);
+            }
+          },
+          {
+            name: '1.2: parseTextToTokens phân tích HTML span và font color không lọt tag',
+            run: () => {
+              const html = '<div><font color="#b8a8a8">trời ơi</font> <span data-color="1">tuyệt vời</span></div>';
+              const res = parseTextToTokens(html);
+              assertEqual(res.length, 1);
+              assert(res[0].tokens.some(t => t.text.includes('trời ơi') && t.colorId === 2), 'Nhận diện màu font #b8a8a8');
+              assert(res[0].tokens.every(t => !t.text.includes('<') && !t.text.includes('>')), 'Không lọt thẻ HTML vào canvas');
+            }
+          },
+          {
+            name: '1.3: applyAlternateParagraphColors xen kẽ màu theo đoạn chuẩn nenstt',
+            run: () => {
+              const lines = [
+                { tokens: [{ text: 'Đoạn 1', colorId: 1 }] },
+                { tokens: [{ text: '', colorId: 1 }] },
+                { tokens: [{ text: 'Đoạn 2', colorId: 1 }] }
+              ];
+              const formatted = applyAlternateParagraphColors(lines, [2, 1]);
+              assertEqual(formatted[0].tokens[0].colorId, 2);
+              assertEqual(formatted[2].tokens[0].colorId, 1);
+            }
+          },
+          {
+            name: '1.4: serializeTokensToHtml chuyển tokens thành HTML',
+            run: () => {
+              const lines = [{ tokens: [{ text: 'Test', colorId: 2 }] }];
+              const html = serializeTokensToHtml(lines);
+              assert(html.includes('data-color="2"'));
+            }
+          }
+        ]
+      },
+      {
+        name: 'Suite 2: 9:16 Canvas Layout & Word Wrapping',
+        tests: [
+          {
+            name: '2.1: calculateWrappedLines ngắt dòng thông minh giữ nguyên màu',
+            run: () => {
+              const mockMeasure = (t) => ({ width: t.length * 20 });
+              const lines = [{ tokens: [{ text: 'Một câu dài cần ngắt dòng trên canvas', colorId: 2 }] }];
+              const wrapped = calculateWrappedLines(lines, 200, mockMeasure);
+              assert(wrapped.length > 1, 'Cần ngắt thành nhiều dòng');
+              assertEqual(wrapped[0].tokens[0].colorId, 2);
+            }
+          },
+          {
+            name: '2.2: calculateVerticalPosition căn giữa chuẩn khung 1920',
+            run: () => {
+              const pos = calculateVerticalPosition({ lineCount: 4, lineHeight: 60, canvasHeight: 1920 });
+              assertEqual(pos.totalHeight, 240);
+              assertEqual(pos.startY, (1920 - 240) / 2);
+            }
+          }
+        ]
+      },
+      {
+        name: 'Suite 3: Export Helpers',
+        tests: [
+          {
+            name: '3.1: generateExportFilename sinh tên file đúng format',
+            run: () => {
+              const fn = generateExportFilename(new Date('2026-08-28T23:30:00'));
+              assert(fn.startsWith('tiktok-quote-20260828-'));
+              assert(fn.endsWith('.png'));
+            }
+          }
+        ]
+      },
+      {
+        name: 'Suite 4: Bottom Sheet Snap Points (Mobile iOS)',
+        tests: [
+          {
+            name: '4.1: getSnapHeight tính chuẩn chiều cao pixel',
+            run: () => {
+              assertEqual(getSnapHeight('collapsed', 800), 110);
+              assert(getSnapHeight('half', 800) <= 400);
+            }
+          },
+          {
+            name: '4.2: calculateSnapPoint tự động hít nấc khi vuốt',
+            run: () => {
+              const snap = calculateSnapPoint({ currentHeight: 250, velocityY: -1, windowHeight: 800 });
+              assertEqual(snap, 'half');
+            }
+          }
+        ]
+      }
+    ];
+
+    suites.forEach(suite => {
+      const suiteDiv = document.createElement('div');
+      suiteDiv.className = 'suite';
+      suiteDiv.innerHTML = `<div class="suite-title">${suite.name}</div>`;
+
+      suite.tests.forEach(t => {
+        const testDiv = document.createElement('div');
+        testDiv.className = 'test';
+        try {
+          t.run();
+          testDiv.classList.add('pass');
+          testDiv.innerHTML = `<span class="icon">✓</span> <span>${t.name}</span>`;
+        } catch (e) {
+          testDiv.classList.add('fail');
+          testDiv.innerHTML = `<span class="icon">✗</span> <span>${t.name} (Lỗi: ${e.message})</span>`;
+        }
+        suiteDiv.appendChild(testDiv);
+      });
+
+      resultsEl.appendChild(suiteDiv);
+    });
+  </script>
+</body>
+</html>

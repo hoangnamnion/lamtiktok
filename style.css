@@ -1,0 +1,278 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+
+:root {
+  --bg-app: #08080b;
+  --bg-glass: rgba(18, 18, 24, 0.88);
+  --border-glass: rgba(255, 255, 255, 0.12);
+  --accent-gradient: linear-gradient(135deg, #ff0050 0%, #00f2fe 100%);
+  --radius-sm: 9px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  background-color: var(--bg-app);
+  color: #fff;
+  font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'SF Pro Text', Roboto, sans-serif;
+  height: 100vh;
+  height: 100dvh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   1. TOP LUXURY MENU BAR (Chứa Màu 1, Màu 2 và Nút Tải Về)
+   ========================================================================== */
+.top-menu-bar {
+  flex-shrink: 0;
+  height: calc(52px + env(safe-area-inset-top, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-glass);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: max(14px, env(safe-area-inset-left, 14px));
+  padding-right: max(14px, env(safe-area-inset-right, 14px));
+  z-index: 100;
+}
+
+.app-logo {
+  width: 30px;
+  height: 30px;
+  background: var(--accent-gradient);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: #fff;
+  font-size: 15px;
+  flex-shrink: 0;
+  box-shadow: 0 0 16px rgba(255, 0, 80, 0.45);
+}
+
+.top-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-pill {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-glass);
+  color: #f4f4f7;
+  padding: 7px 13px;
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.action-pill:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.action-pill:active {
+  transform: scale(0.95);
+}
+
+.color-pill .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot.dot-1 {
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+.dot.dot-2 {
+  background: #b8a8a8;
+}
+
+/* Nút Tải Về Sang Trọng */
+.btn-top-download {
+  background: #ffffff;
+  color: #000000;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 7px 15px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.28);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.btn-top-download:active {
+  transform: scale(0.95);
+}
+
+/* ==========================================================================
+   2. CENTER STAGE (Khung 9:16 Chiếm Trọn Màn Hình)
+   ========================================================================== */
+.center-stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 14px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));
+  position: relative;
+  overflow: hidden;
+}
+
+.story-frame-container {
+  position: relative;
+  height: 100%;
+  max-height: 100%;
+  aspect-ratio: 9 / 16;
+  width: auto;
+  max-width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.14);
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.story-bg-layer {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url('nen.jpg');
+}
+
+.story-overlay-layer {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0,0,0,0.18) 30%, rgba(0,0,0,0.58) 95%);
+  pointer-events: none;
+}
+
+/* Direct Text Editor (Soạn thảo trực tiếp trên ảnh) */
+.direct-text-editor-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 12% 9%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 10;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.direct-text-editor-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.direct-editor {
+  outline: none;
+  border: none;
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: #ffffff;
+  white-space: pre-wrap;
+  word-break: break-word;
+  user-select: text;
+  text-align: left;
+  min-height: 40px;
+}
+
+.direct-editor:empty:before {
+  content: attr(placeholder);
+  color: rgba(255, 255, 255, 0.42);
+  pointer-events: none;
+}
+
+.direct-editor span[data-color="1"] {
+  color: #ffffff !important;
+}
+
+.direct-editor span[data-color="2"] {
+  color: #b8a8a8 !important;
+  opacity: 0.88;
+}
+
+/* Author Tag */
+.author-tag {
+  font-size: 12.5px;
+  color: #8e8e99;
+  margin-top: 14px;
+  padding-right: 18px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  opacity: 0.9;
+  text-align: right;
+  display: none; /* Only show when editor has text */
+  user-select: none;
+}
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  top: calc(64px + env(safe-area-inset-top, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.toast {
+  background: rgba(26, 26, 36, 0.96);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 500;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: toastFadeIn 0.2s ease, toastFadeOut 0.2s ease 2.2s forwards;
+}
+
+@keyframes toastFadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toastFadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-8px); }
+}

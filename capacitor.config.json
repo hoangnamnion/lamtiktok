@@ -1,0 +1,14 @@
+{
+  "appId": "com.nam.tiktokquote",
+  "appName": "TikTok Quote",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https",
+    "iosScheme": "capacitor"
+  },
+  "ios": {
+    "contentInset": "always",
+    "backgroundColor": "#08080b"
+  }
+}
