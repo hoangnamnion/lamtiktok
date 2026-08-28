@@ -15,17 +15,17 @@ const btnColor2 = document.getElementById('btnColor2');
 const btnSaveGallery = document.getElementById('btnSaveGallery');
 const toastContainer = document.getElementById('toastContainer');
 
-// Fixed Default State
+// Fixed Default State (Tối ưu chuẩn 100% theo nen.jpg & nenstt.jpg)
 const state = {
   fontFamily: "'Be Vietnam Pro', sans-serif",
-  fontSize: 52,
-  lineHeight: 1.7,
-  paragraphSpacing: 45,
+  fontSize: 48,
+  lineHeight: 1.65,
+  paragraphSpacing: 42,
   textAlign: 'left',
   color1: '#ffffff',
-  color2: '#b8a8a8',
-  darkOverlay: 0.20,
-  vignette: 0.40,
+  color2: '#b59e9e',
+  darkOverlay: 0,
+  vignette: 0,
   bgImage: null,
   bgImageSrc: 'nen.jpg',
   authorTag: '#nam_26th4'
@@ -82,7 +82,7 @@ function renderExportCanvas() {
   exportCanvas.width = canvasWidth;
   exportCanvas.height = canvasHeight;
 
-  // 1. Vẽ ảnh nền
+  // 1. Vẽ ảnh nền nen.jpg nguyên bản 100% không đổi màu
   if (state.bgImage) {
     const img = state.bgImage;
     const imgAspect = img.width / img.height;
@@ -102,28 +102,7 @@ function renderExportCanvas() {
     }
     exportCtx.drawImage(img, drawX, drawY, drawW, drawH);
   } else {
-    const gradient = exportCtx.createLinearGradient(0, 0, 0, canvasHeight);
-    gradient.addColorStop(0, '#150608');
-    gradient.addColorStop(1, '#080203');
-    exportCtx.fillStyle = gradient;
-    exportCtx.fillRect(0, 0, canvasWidth, canvasHeight);
-  }
-
-  // 2. Lớp phủ tối
-  if (state.darkOverlay > 0) {
-    exportCtx.fillStyle = `rgba(0, 0, 0, ${state.darkOverlay})`;
-    exportCtx.fillRect(0, 0, canvasWidth, canvasHeight);
-  }
-
-  // 3. Viền tối Vignette
-  if (state.vignette > 0) {
-    const vigGradient = exportCtx.createRadialGradient(
-      canvasWidth / 2, canvasHeight / 2, canvasWidth * 0.3,
-      canvasWidth / 2, canvasHeight / 2, canvasWidth * 0.9
-    );
-    vigGradient.addColorStop(0, 'rgba(0,0,0,0)');
-    vigGradient.addColorStop(1, `rgba(0,0,0,${state.vignette})`);
-    exportCtx.fillStyle = vigGradient;
+    exportCtx.fillStyle = '#150608';
     exportCtx.fillRect(0, 0, canvasWidth, canvasHeight);
   }
 
@@ -136,10 +115,10 @@ function renderExportCanvas() {
   const lineSpacing = fontSize * state.lineHeight;
   const paragraphSpacing = state.paragraphSpacing;
   const fontFamily = state.fontFamily;
-  const paddingX = 120;
+  const paddingX = 110;
   const maxLineWidth = canvasWidth - (paddingX * 2);
 
-  exportCtx.font = `400 ${fontSize}px ${fontFamily}`;
+  exportCtx.font = `350 ${fontSize}px ${fontFamily}`;
   exportCtx.textBaseline = 'middle';
 
   // 6. Wrap dòng
@@ -259,6 +238,8 @@ btnSaveGallery.addEventListener('click', async () => {
     if (document.fonts) await document.fonts.ready;
     renderExportCanvas();
 
+    const dataUrl = exportCanvas.toDataURL('image/png');
+
     exportCanvas.toBlob(async (blob) => {
       if (!blob) {
         showToast('Không thể tạo ảnh, thử lại nhé', '❌');
@@ -268,9 +249,11 @@ btnSaveGallery.addEventListener('click', async () => {
       }
 
       const filename = generateExportFilename();
-      const res = await saveImageToGallery(blob, filename);
+      const res = await saveImageToGallery(blob, filename, dataUrl);
       if (res.success) {
-        if (res.method === 'share') {
+        if (res.method === 'native-photos') {
+          showToast('✓ Đã lưu thẳng vào Thư viện Ảnh (Photos)!', '🎉');
+        } else if (res.method === 'share') {
           showToast('Đã mở bảng lưu vào Thư viện ảnh!', '🎉');
         } else {
           showToast('Đã tải ảnh HD về máy!', '📥');

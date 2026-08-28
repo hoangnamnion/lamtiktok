@@ -29,6 +29,8 @@ const filesToCopy = [
   'manifest.json',
   'nen.jpg',
   'nenstt.jpg',
+  'logo.jpg',
+  'logo.png',
   'src'
 ];
 

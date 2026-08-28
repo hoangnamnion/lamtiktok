@@ -17,7 +17,10 @@
 
   <!-- Menu Trên Cùng (Màu 1, Màu 2 & Nút Tải Về Trực Tiếp) -->
   <header class="top-menu-bar">
-    <div class="app-logo">Q</div>
+    <div class="app-logo-box">
+      <img src="logo.jpg" alt="Logo" class="app-logo-img" onerror="this.onerror=null; this.src='logo.png'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex';}">
+      <div class="app-logo" style="display: none;">Q</div>
+    </div>
     <div class="top-bar-actions">
       <button type="button" class="action-pill color-pill" id="btnColor1" title="Tô màu trắng sáng cho chữ bôi đen">
         <span class="dot dot-1"></span> Màu 1
@@ -40,7 +43,6 @@
   <main class="center-stage">
     <div class="story-frame-container" id="storyFrame">
       <div class="story-bg-layer" id="storyBgLayer"></div>
-      <div class="story-overlay-layer" id="storyOverlayLayer"></div>
 
       <div class="direct-text-editor-wrapper">
         <div id="quoteEditor" class="direct-editor" contenteditable="true" spellcheck="false" placeholder="Chạm vào đây để gõ status..."></div>
