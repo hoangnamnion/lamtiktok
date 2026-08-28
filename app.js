@@ -278,4 +278,28 @@ window.addEventListener('DOMContentLoaded', async () => {
   await loadBackgroundImage('nen.jpg');
   quoteEditor.innerHTML = '';
   syncEditorStyles();
+
+  // Xin quyền truy cập Thư viện Ảnh ngay khi mở App trên iOS Native
+  if (typeof window !== 'undefined' && window.Capacitor && window.Capacitor.isNativePlatform()) {
+    try {
+      const Media = window.Capacitor.Plugins?.Media;
+      if (Media && typeof Media.checkPermissions === 'function') {
+        const perm = await Media.checkPermissions();
+        if (perm?.photos !== 'granted') {
+          await Media.requestPermissions({ permissions: ['photos'] });
+        }
+      }
+    } catch (e) {
+      // Thử qua @capacitor/filesystem nếu plugin Media không hỗ trợ checkPermissions
+      try {
+        const Filesystem = window.Capacitor.Plugins?.Filesystem;
+        if (Filesystem && typeof Filesystem.checkPermissions === 'function') {
+          const fsPerm = await Filesystem.checkPermissions();
+          if (fsPerm?.publicStorage !== 'granted') {
+            await Filesystem.requestPermissions();
+          }
+        }
+      } catch (_) {}
+    }
+  }
 });

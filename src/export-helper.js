@@ -1,5 +1,5 @@
 /**
- * Module tiện ích xuất và lưu ảnh vào thư viện máy
+ * Module tiện ích xuất và lưu ảnh vào thư viện máy chống crash 100%
  */
 
 /**
@@ -26,26 +26,51 @@ export function generateExportFilename(date = new Date()) {
  * @returns {Promise<{ success: boolean, method: 'native-photos' | 'share' | 'download' }>}
  */
 export async function saveImageToGallery(blob, filename = generateExportFilename(), dataUrl = '') {
-  // 1. Kiểm tra môi trường Native Capacitor iOS App -> Lưu THẲNG vào ứng dụng Photos (Camera Roll)
+  const base64Data = dataUrl || (await blobToDataUrl(blob));
+
+  // 1. Kiểm tra môi trường Native Capacitor iOS App -> Lưu THẲNG vào Photos (Camera Roll)
   if (typeof window !== 'undefined' && window.Capacitor && window.Capacitor.isNativePlatform()) {
+    // Thử lưu qua @capacitor-community/media
     try {
       const Media = window.Capacitor.Plugins?.Media;
       if (Media && typeof Media.savePhoto === 'function') {
-        const photoPath = dataUrl || (await blobToDataUrl(blob));
         await Media.savePhoto({
-          path: photoPath,
+          path: base64Data,
           albumName: 'TikTok Quotes'
         });
         return { success: true, method: 'native-photos' };
       }
-    } catch (nativeErr) {
-      console.warn('Lỗi lưu qua plugin Native Media, thử fallback:', nativeErr);
+    } catch (mediaErr) {
+      console.warn('Lỗi plugin Media, chuyển sang lưu qua Filesystem / Share:', mediaErr);
+    }
+
+    // Thử fallback qua Filesystem + Share Native của iOS
+    try {
+      const Filesystem = window.Capacitor.Plugins?.Filesystem;
+      const Share = window.Capacitor.Plugins?.Share;
+      if (Filesystem && Share) {
+        const rawBase64 = base64Data.replace(/^data:image\/[a-z]+;base64,/, '');
+        const savedFile = await Filesystem.writeFile({
+          path: filename,
+          data: rawBase64,
+          directory: 'CACHE'
+        });
+
+        if (savedFile && savedFile.uri) {
+          await Share.share({
+            title: 'Lưu ảnh Status TikTok',
+            url: savedFile.uri
+          });
+          return { success: true, method: 'share' };
+        }
+      }
+    } catch (fsErr) {
+      console.warn('Lỗi Filesystem / Share Native:', fsErr);
     }
   }
 
-  const file = new File([blob], filename, { type: 'image/png' });
-
   // 2. Web Share API (Safari iOS / Android Browser)
+  const file = new File([blob], filename, { type: 'image/png' });
   if (typeof navigator !== 'undefined' && navigator.canShare && navigator.canShare({ files: [file] })) {
     try {
       await navigator.share({
@@ -62,7 +87,7 @@ export async function saveImageToGallery(blob, filename = generateExportFilename
     }
   }
 
-  // 3. Fallback tải file thông thường
+  // 3. Fallback tải file qua thẻ <a>
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
