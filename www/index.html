@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>TikTok Quote Maker</title>
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TikTok Quote">
+  <meta name="theme-color" content="#08080b">
+  <link rel="manifest" href="manifest.json">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Menu Trên Cùng (Màu 1, Màu 2 & Nút Tải Về Trực Tiếp) -->
+  <header class="top-menu-bar">
+    <div class="app-logo-box">
+      <img src="logo.jpg" alt="Logo" class="app-logo-img" onerror="this.onerror=null; this.src='logo.png'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex';}">
+      <div class="app-logo" style="display: none;">Q</div>
+    </div>
+    <div class="top-bar-actions">
+      <button type="button" class="action-pill color-pill" id="btnColor1" title="Tô màu trắng sáng cho chữ bôi đen">
+        <span class="dot dot-1"></span> Màu 1
+      </button>
+      <button type="button" class="action-pill color-pill" id="btnColor2" title="Tô màu xám tro cho chữ bôi đen">
+        <span class="dot dot-2"></span> Màu 2
+      </button>
+      <button type="button" class="btn-top-download" id="btnSaveGallery" title="Tải ảnh về máy">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <span>Tải về</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Khung Ảnh 9:16 Điền Chữ Trực Tiếp -->
+  <main class="center-stage">
+    <div class="story-frame-container" id="storyFrame">
+      <div class="story-bg-layer" id="storyBgLayer"></div>
+
+      <div class="direct-text-editor-wrapper">
+        <div id="quoteEditor" class="direct-editor" contenteditable="true" spellcheck="false" placeholder="Chạm vào đây để gõ status..."></div>
+        <div class="author-tag" id="authorTag">#nam_26th4</div>
+      </div>
+    </div>
+
+    <!-- Hidden Export Canvas -->
+    <canvas id="exportCanvas" width="1080" height="1920" style="display: none;"></canvas>
+  </main>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- App Script -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
