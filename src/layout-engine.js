@@ -65,7 +65,7 @@ export function calculateWrappedLines(inputLines, maxLineWidth, measureTextFn) {
  * @param {number} params.lineHeight - Chiều cao 1 dòng
  * @param {number} params.paragraphBreakCount - Số lần ngắt đoạn trống
  * @param {number} params.paragraphSpacing - Khoảng cách bổ sung khi ngắt đoạn
- * @param {number} params.canvasHeight - Chiều cao canvas (1920)
+ * @param {number} params.canvasHeight - Chiều cao canvas (1560)
  * @returns {{ startY: number, totalHeight: number }}
  */
 export function calculateVerticalPosition({
@@ -73,7 +73,7 @@ export function calculateVerticalPosition({
   lineHeight,
   paragraphBreakCount = 0,
   paragraphSpacing = 0,
-  canvasHeight = 1920
+  canvasHeight = 1560
 }) {
   const totalHeight = (lineCount * lineHeight) + (paragraphBreakCount * paragraphSpacing);
   const startY = Math.max(80, (canvasHeight - totalHeight) / 2);

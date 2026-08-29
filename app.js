@@ -77,8 +77,8 @@ function loadBackgroundImage(src) {
 
 // Render Full HD Canvas (1080 x 1920) for Export
 function renderExportCanvas() {
-  const canvasWidth = 1080;
-  const canvasHeight = 1920;
+  const canvasWidth = 1170;
+  const canvasHeight = 1560;
   exportCanvas.width = canvasWidth;
   exportCanvas.height = canvasHeight;
 
